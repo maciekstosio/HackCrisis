@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, FlatList } from 'react-native-gesture-handler';
 import * as Contacts from 'expo-contacts';
 
 export default function PeopleScreen() {
@@ -21,10 +21,15 @@ export default function PeopleScreen() {
 	}, []);
 
 	return (
-		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+		<View>
 			{isLoading && <ActivityIndicator />}
-			{contacts.map(PersonRow)}
-		</ScrollView>
+			<FlatList
+				refreshing={isLoading}
+				data={contacts}
+				renderItem={PersonRow}
+				keyExtractor={item => item.id}
+			/>
+		</View>
 	);
 }
 
@@ -43,18 +48,14 @@ const getContacts = async () => {
 	}
 }
 
-const PersonRow = (data) => {
-	const {
-		name,
-		id,
-	} = data
+const PersonRow = ({item}) => {
+	const {name} = item
 
-	console.log(data)
 	return (
-		<View key={id} style={styles.contactRowContainer}>
+		<View style={styles.contactRowContainer}>
 			<View>
 				<Avatar
-					user={data}
+					user={item}
 				/>	
 			</View>
 			<View style={styles.contentRowTextContainer}>
