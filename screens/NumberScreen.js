@@ -2,21 +2,22 @@ import React, {useState} from 'react'
 import { 
     StyleSheet,
     View, 
-    Text, 
-    Picker, 
+    Text,  
     Keyboard, 
     TouchableWithoutFeedback, 
     KeyboardAvoidingView,
     Alert,
-    TouchableOpacity,
-    FlatList,
 } from 'react-native'
 import {
     Input,
     Button,
     PickerList,
 } from '../components'
-import { getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js'
+import { 
+    getCountryCallingCode,
+    parsePhoneNumberFromString,
+    getCountries
+} from 'libphonenumber-js'
 import Locale from '../locale'
 import countryNames from '../locale/countryNames'
 import { Ionicons } from '@expo/vector-icons'
@@ -26,7 +27,16 @@ const NumberScreen = ({navigation}) => {
     const [value, onChangeText] = React.useState('')
     const [languagePickerVisibility, setLanguagePickerVisibility] = useState(false)
 
-    const countryList = countryNames.map(({name, code}) => ({label: name, value: code}))
+    const countriesAvailableForParse = getCountries()
+    const countriesAvailableForParseMap = {}
+
+    countriesAvailableForParse.forEach(country => {
+        countriesAvailableForParseMap[country] = true
+    })
+
+    const countryList = countryNames
+        .filter(({code}) => Boolean(countriesAvailableForParseMap[code]))
+        .map(({name, code}) => ({label: name, value: code}))
 
     const dismissElements = () => {
         Keyboard.dismiss()
@@ -39,7 +49,6 @@ const NumberScreen = ({navigation}) => {
     }
 
     const onLogIn = () => {
-
         const countryCallingCode = getCountryCallingCode(language)
         const numberString = `+${countryCallingCode}${value}`
         const phoneNumber = parsePhoneNumberFromString(numberString)
@@ -104,7 +113,7 @@ const NumberScreen = ({navigation}) => {
                     headerTitle={Locale.t('login.selectCountry')}
                     items={countryList}
                     selectedValue={language}
-                    onValueChange={(itemValue, itemIndex) => setLanguage(itemValue)}
+                    onValueChange={(itemValue, _) => setLanguage(itemValue)}
                     pickerVisibility={languagePickerVisibility}
                     setPickerVisibility={setLanguagePickerVisibility}
                 />
