@@ -7,11 +7,13 @@ import {
     TouchableWithoutFeedback, 
     KeyboardAvoidingView,
     Alert,
+    SafeAreaView,
 } from 'react-native'
 import {
     Input,
     Button,
     PickerList,
+    LanguagePrefix,
 } from '../components'
 import { 
     getCountryCallingCode,
@@ -33,6 +35,8 @@ const NumberScreen = ({navigation}) => {
     countriesAvailableForParse.forEach(country => {
         countriesAvailableForParseMap[country] = true
     })
+
+    const clearTextField = () => onChangeText('')
 
     const countryList = countryNames
         .filter(({code}) => Boolean(countriesAvailableForParseMap[code]))
@@ -64,11 +68,10 @@ const NumberScreen = ({navigation}) => {
             Alert.alert(
                 'Ok!',
                 JSON.stringify(numberData),
-                [{text: 'OK', onPress: () => navigation.navigate('Root')}],
+                [{text: 'OK', onPress: () => navigation.navigate('OTP')}],
                 { cancelable: false }
               )
 
-            navigation.navigate('Root')
         } else {
             Alert.alert(
                 'Error!',
@@ -77,8 +80,10 @@ const NumberScreen = ({navigation}) => {
                 { cancelable: true }
             )
         }
-    }
 
+        dismissElements()
+        clearTextField()
+    }
 
     return (
         <TouchableWithoutFeedback onPress={dismissElements} accessible={false}>
@@ -97,9 +102,14 @@ const NumberScreen = ({navigation}) => {
                         <Text style={{fontSize: 32}}>{Locale.t('name')}</Text>
                     </View>
                     <Input 
-                        language={language}
-                        onLanguagePress={openPicker}
+                        preElement={(
+                            <LanguagePrefix
+                                language={language}
+                                onLanguagePress={openPicker}
+                            />
+                        )}
                         onChangeText={text => onChangeText(text)}
+                        value={value}
                     />
                     <Button 
                         onPress={onLogIn}

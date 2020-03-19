@@ -60,7 +60,13 @@ export default function App(props) {
 								headerShown: false,
 							}}
 						/>
-						<Stack.Screen name="OTP" component={OTPScreen} />
+						<Stack.Screen 
+							name="OTP" 
+							component={OTPScreen}
+							options={{
+								headerShown: false,
+							}}
+						/>
 						<Stack.Screen name="Root" component={BottomTabNavigator} />
 					</Stack.Navigator>
 				</NavigationContainer>
