@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { SplashScreen } from 'expo';
+import { SplashScreen, Notifications} from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import NumberScreen from './screens/NumberScreen';
 import OTPScreen from './screens/OTPScreen';
+import Splash from './screens/SplashScreen'
 import useLinking from './navigation/useLinking';
 
 const Stack = createStackNavigator();
@@ -19,9 +20,14 @@ export default function App(props) {
 	const containerRef = React.useRef();
 	const { getInitialState } = useLinking(containerRef);
 
+	const handleNotification = notification => {
+		// do whatever you want to do with the notification
+		console.log("NOTIFICATION", notification)
+	};
+	
 	// Load any resources or data that we need prior to rendering the app
 	React.useEffect(() => {
-		async function loadResourcesAndDataAsync() {
+		(async function loadResourcesAndDataAsync() {
 			try {
 				SplashScreen.preventAutoHide();
 
@@ -40,17 +46,21 @@ export default function App(props) {
 				setLoadingComplete(true);
 				SplashScreen.hide();
 			}
-		}
+		})()
 
-		loadResourcesAndDataAsync();
+
+		Notifications.addListener(handleNotification)
 	}, []);
+
+	Notifications.setBadgeNumberAsync(0)
+
 
 	if (!isLoadingComplete && !props.skipLoadingScreen) {
 		return null;
 	} else {
 		return (
 			<View style={styles.container}>
-				{Platform.OS === 'ios' && <StatusBar barStyle={__DEV__ ? "light-content" : "dark-content"} />}
+				{Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
 				<NavigationContainer ref={containerRef} initialState={initialNavigationState}>
 					<Stack.Navigator>
 						<Stack.Screen
@@ -63,6 +73,13 @@ export default function App(props) {
 						<Stack.Screen 
 							name="OTP" 
 							component={OTPScreen}
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen 
+							name="Splash" 
+							component={Splash}
 							options={{
 								headerShown: false,
 							}}

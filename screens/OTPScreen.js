@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { 
     StyleSheet,
     View, 
@@ -20,12 +20,7 @@ const OTPScreen = ({navigation}) => {
     const [value, onChangeText] = React.useState('')
     const dismissElements = () => Keyboard.dismiss()
     const goBack = () => navigation.goBack()
-    const onCheck = () => {
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'Root' }],
-          });
-    }
+    const onCheck = () => navigation.navigate('Splash')
 
     return (
         <TouchableWithoutFeedback onPress={dismissElements} accessible={false}>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { 
     StyleSheet,
     View, 
@@ -68,7 +68,11 @@ const NumberScreen = ({navigation}) => {
             Alert.alert(
                 'Ok!',
                 JSON.stringify(numberData),
-                [{text: 'OK', onPress: () => navigation.navigate('OTP')}],
+                [{text: 'OK', onPress: () => {
+                    dismissElements()
+                    clearTextField()
+                    navigation.navigate('OTP')
+                }}],
                 { cancelable: false }
               )
 
@@ -76,14 +80,21 @@ const NumberScreen = ({navigation}) => {
             Alert.alert(
                 'Error!',
                 'Number not valid!',
-                [{text: 'OK', onPress: () => {}}],
+                [{text: 'OK', onPress: () => {
+                    dismissElements()
+                    clearTextField()
+                }}],
                 { cancelable: true }
             )
         }
-
-        dismissElements()
-        clearTextField()
     }
+
+    //For development only
+    useEffect(() => {
+        if (__DEV__) {
+            navigation.navigate('Splash')
+        }
+    }, [])
 
     return (
         <TouchableWithoutFeedback onPress={dismissElements} accessible={false}>
