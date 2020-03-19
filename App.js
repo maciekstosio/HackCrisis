@@ -50,7 +50,7 @@ export default function App(props) {
 	} else {
 		return (
 			<View style={styles.container}>
-				{Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
+				{Platform.OS === 'ios' && <StatusBar barStyle={__DEV__ ? "light-content" : "dark-content"} />}
 				<NavigationContainer ref={containerRef} initialState={initialNavigationState}>
 					<Stack.Navigator>
 						<Stack.Screen

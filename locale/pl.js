@@ -1,7 +1,8 @@
 export default {
-    name: "HackCrisis",
+    name: 'HackCrisis',
     login: {
         title: 'Strona Logowania',
         login: 'Zaloguj',
+        selectCountry: 'Wybierz kraj',
     },
 }
