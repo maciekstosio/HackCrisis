@@ -89,7 +89,6 @@ const renderSummary = (optionsData, step, survey, outcome, setOutcome, setStep) 
 
 const renderNextButton = (nextSurvey, outcome, step, setStep, setOutcome) => {
     const onPress = () => {
-        console.log("outcome", outcome)
         setOutcome([...outcome, step])
         setStep(nextSurvey)
     }
