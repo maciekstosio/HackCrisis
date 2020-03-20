@@ -11,6 +11,9 @@ import NumberScreen from './screens/NumberScreen';
 import OTPScreen from './screens/OTPScreen';
 import Splash from './screens/SplashScreen'
 import useLinking from './navigation/useLinking';
+import SurveyScreen from './screens/SurveyScreen';
+
+import Colors from './constants/Colors';
 
 const Stack = createStackNavigator();
 
@@ -84,6 +87,7 @@ export default function App(props) {
 								headerShown: false,
 							}}
 						/>
+						<Stack.Screen name="Survey" component={SurveyScreen} />
 						<Stack.Screen name="Root" component={BottomTabNavigator} />
 					</Stack.Navigator>
 				</NavigationContainer>
@@ -95,6 +99,6 @@ export default function App(props) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
+		backgroundColor: Colors.background,
 	},
 });

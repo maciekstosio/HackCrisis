@@ -23,6 +23,7 @@ import {
 import Locale from '../locale'
 import countryNames from '../locale/countryNames'
 import { Ionicons } from '@expo/vector-icons'
+import Colors from '../constants/Colors'
 
 const NumberScreen = ({navigation}) => {
     const [language, setLanguage] = useState(Locale.locale.split('-')[1])
@@ -108,7 +109,7 @@ const NumberScreen = ({navigation}) => {
                         <Ionicons 
                             name="md-pulse"
                             size={128}
-                            color="#ff375f"
+                            color={Colors.tintColor}
                         />
                         <Text style={{fontSize: 32}}>{Locale.t('name')}</Text>
                     </View>

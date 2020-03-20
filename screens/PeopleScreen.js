@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
 import { ScrollView, FlatList } from 'react-native-gesture-handler';
 import * as Contacts from 'expo-contacts';
+import Colors from '../constants/Colors';
 
 export default function PeopleScreen() {
 	const [contacts, setContacts] = useState([])
@@ -91,7 +92,7 @@ const avatarStyles = StyleSheet.create({
 	container: {
 		width: 60,
 		height: 60,
-		backgroundColor: '#ddd',
+		backgroundColor: Colors.gray,
 		borderRadius: 30,
 		flex: 1,
 		justifyContent: 'center',
@@ -105,7 +106,7 @@ const avatarStyles = StyleSheet.create({
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fafafa',
+		backgroundColor: Colors.background,
 	},
 	contentContainer: {
 		paddingTop: 15,
@@ -120,6 +121,7 @@ const styles = StyleSheet.create({
 		paddingLeft: 10,
 	},
 	contentRowTextContainerName: {
+		color: Colors.dark,
 		fontSize: 16,
 	}
 });

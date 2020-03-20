@@ -9,5 +9,21 @@ export default {
         enterCode: 'Wprowadź kod z SMS',
         back: 'Powrót do logowania',
         noSMS: 'Brak kodu SMS?',
+    },
+    status: {
+        title: "Status",
+        headerTitle: "Zaktualizuj swój status!",
+    },
+    dashboard: {
+        title: "Wiadomości",
+        headerTitle: "HackCrisis",
+        survey: "Rozpocznij ankiete",
+    },
+    people: {
+        title: "Znajomi",
+        headerTitle: "Status znajomych",
+    },
+    survey: {
+        title: "Ankieta",
     }
 }

@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import registerForPushNotificationsAsync from '../services/pushNotification'
+import Colors from '../constants/Colors'
 
 const SplashScreen = ({navigation}) => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -44,7 +45,7 @@ const SplashScreen = ({navigation}) => {
                 <Ionicons 
                     name="md-pulse"
                     size={128}
-                    color="#ff375f"
+                    color={Colors.tintColor}
                 />
             </Animated.View>
 
