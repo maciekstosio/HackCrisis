@@ -25,5 +25,14 @@ export default {
     },
     survey: {
         title: "Ankieta",
+        next: "Następna strona",
+        finish: "Zakończ ankietę",
+        risk: "Twój poziom zagrożenia jest",
+        riskLevel: {
+            1: "znikomy",
+            2: "niski",
+            3: "średni",
+            4: "wysoki",
+        }
     }
 }

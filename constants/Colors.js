@@ -13,7 +13,9 @@ export default {
   noticeBackground: accentColor,
   noticeText: '#fff',
 
+  blue: '#339ffa',
   dark: '#222',
+  white: '#fff',
   gray: '#ddd',
   background: '#fff',
   overlay: 'rgba(0,0,0,0.5)',

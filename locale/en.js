@@ -25,5 +25,7 @@ export default {
     },
     survey: {
         title: "Survey",
+        next: "Next page",
+        finish: "Finish survey",
     }
 }
