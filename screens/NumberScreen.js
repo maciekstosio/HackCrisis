@@ -6,14 +6,13 @@ import {
     Keyboard, 
     TouchableWithoutFeedback, 
     KeyboardAvoidingView,
-    Alert,
-    SafeAreaView,
 } from 'react-native'
 import {
     Input,
     Button,
     PickerList,
     LanguagePrefix,
+    Alert,
 } from '../components'
 import { 
     getCountryCallingCode,
@@ -24,6 +23,7 @@ import Locale from '../locale'
 import countryNames from '../locale/countryNames'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '../constants/Colors'
+import Config from '../config'
 
 const NumberScreen = ({navigation}) => {
     const [language, setLanguage] = useState(Locale.locale.split('-')[1])
@@ -53,7 +53,7 @@ const NumberScreen = ({navigation}) => {
         setLanguagePickerVisibility(true)
     }
 
-    const onLogIn = () => {
+    const onLogIn = async () => {
         const countryCallingCode = getCountryCallingCode(language)
         const numberString = `+${countryCallingCode}${value}`
         const phoneNumber = parsePhoneNumberFromString(numberString)
@@ -66,36 +66,56 @@ const NumberScreen = ({navigation}) => {
         }
 
         if (numberData.valid) {
-            Alert.alert(
-                'Ok!',
-                JSON.stringify(numberData),
-                [{text: 'OK', onPress: () => {
-                    dismissElements()
-                    clearTextField()
-                    navigation.navigate('OTP')
-                }}],
-                { cancelable: false }
-              )
+            dismissElements()
+            clearTextField()
+            
+            try {
+                const response = await fetch(Config.api + '/auth/request_token', {
+                    method: 'POST',
+                    headers:{
+                        'Content-Type':'application/json', 
+                    },
+                    body: JSON.stringify({
+                        phone: numberString,
+                    }),
+                })
 
-        } else {
-            Alert.alert(
-                'Error!',
-                'Number not valid!',
-                [{text: 'OK', onPress: () => {
+                if (response.ok) {
+                    navigation.navigate('OTP', {
+                        phone: numberString,
+                    })
+                } else {
+                    Alert.alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
+                        dismissElements()
+                        clearTextField()  
+                    }) 
+
+                    //TODO: ERROR ANALYTICS
+                    console.warn("Server error")
+                }
+            } catch(err) {
+                Alert.alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
                     dismissElements()
-                    clearTextField()
-                }}],
-                { cancelable: true }
-            )
+                    clearTextField()  
+                })
+
+                //TODO: ERROR ANALYTICS
+                console.warn(e)
+            }
+        } else {
+            Alert.alert(Locale.t('general.error'), Locale.t('number.notValid'), () => {
+                dismissElements()
+                clearTextField()  
+            })
         }
     }
 
     //For development only
-    useEffect(() => {
-        if (__DEV__) {
-            navigation.navigate('Splash')
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (__DEV__) {
+    //         navigation.navigate('Splash')
+    //     }
+    // }, [])
 
     return (
         <TouchableWithoutFeedback onPress={dismissElements} accessible={false}>

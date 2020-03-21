@@ -1,4 +1,5 @@
 import React, {useRef, useEffect} from 'react'
+import { connect } from 'react-redux'
 import { 
     StyleSheet,
     View, 
@@ -7,11 +8,105 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 import registerForPushNotificationsAsync from '../services/pushNotification'
 import Colors from '../constants/Colors'
+import { Notifications } from 'expo'
+import * as Permissions from 'expo-permissions'
+import * as Location from 'expo-location'
+import * as Contacts from 'expo-contacts'
+import { 
+    getCountryCallingCode,
+    isSupportedCountry,
+    parsePhoneNumberFromString,
+ } from 'libphonenumber-js'
+import Locale from '../locale'
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ({navigation, setUpPermission}) => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
+
+        (async () => {
+            const getLocation = async permission => {
+                if (!permission) return {
+                    lat: 0,
+                    lon: 0,
+                }
+
+                const {coords} = await Location.getCurrentPositionAsync()
+
+                return {
+                    lat: coords.latitude,
+                    lon: coords.longitude,
+                }
+            }
+
+            const mapContacts = contact => {
+                const {
+                    id,
+                    firstName,
+                    lastName, 
+                    image,
+                    imageAvailable,
+                    name,
+                    phoneNumbers,
+                } = contact 
+
+                if (!phoneNumbers) return null
+
+                return {
+                    id,
+                    firstName,
+                    lastName, 
+                    image,
+                    imageAvailable,
+                    name,
+                    phoneNumbers: phoneNumbers.map(number => {
+                        if (parsePhoneNumberFromString(number.digits)) {
+                            return number.digits
+                        } else {
+                            if (!isSupportedCountry(number.countryCode.toUpperCase())) return null
+                        
+                            const countryCode = getCountryCallingCode(number.countryCode.toUpperCase())
+
+                            return '+' + countryCode + number.digits
+                        }
+                    }).filter(number => Boolean(number))
+                }
+            }
+
+            const getContacts = async permission => {
+                if (!permission) return []
+
+                const { data } = await Contacts.getContactsAsync({
+                    fields: [Contacts.Fields.Image, Contacts.Fields.PhoneNumbers],
+                });
+
+                return data.map(mapContacts).filter(Boolean)
+            }
+
+            const getPushNotificationId = async permission => {
+                if (!permission) return ''
+                return await Notifications.getExpoPushTokenAsync()
+            }
+
+            const {permissions} = await Permissions.askAsync(
+                Permissions.NOTIFICATIONS,
+                Permissions.LOCATION,
+                Permissions.CONTACTS,
+            )
+
+            const contactsPermission = permissions.contacts.granted
+            const locationPermission = permissions.location.granted
+            const notificationsPermission = permissions.notifications.granted
+            
+
+            const location = await getLocation(locationPermission)
+            const contacts = await getContacts(contactsPermission)
+            const pushNotificationId = await getPushNotificationId(notificationsPermission)
+            const friendsNumbers = contacts.reduce((acc, curr) => [...acc, ...curr.phoneNumbers], [])
+
+            console.log("data", contacts, friendsNumbers, location, pushNotificationId)
+        })()
+
         Animated.loop(
             Animated.sequence([
                 Animated.timing(fadeAnim, {
@@ -24,15 +119,6 @@ const SplashScreen = ({navigation}) => {
                 }),
             ])
         ).start()
-
-        registerForPushNotificationsAsync()
-
-        setTimeout(() => {
-            navigation.reset({
-                index: 0,
-                routes: [{ name: 'Dashboard' }],
-                });
-        }, 2000)
     }, [])
 
     return (
@@ -62,4 +148,6 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SplashScreen
+const mapStateToProps = (state, ownProps) => ({})
+
+export default connect(mapStateToProps)(SplashScreen)

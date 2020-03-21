@@ -15,12 +15,47 @@ import {
 import Locale from '../locale'
 import { Ionicons } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import Config from '../config'
 
-const OTPScreen = ({navigation}) => {
+const OTPScreen = ({route, navigation}) => {
     const [value, onChangeText] = React.useState('')
     const dismissElements = () => Keyboard.dismiss()
     const goBack = () => navigation.goBack()
-    const onCheck = () => navigation.navigate('Splash')
+    const onCheck = async () => {
+        try {
+            const phone = route.params.phone
+            const response = await fetch(Config.api + '/auth/login', {
+                method: 'POST',
+                headers:{
+                    'Content-Type':'application/json', 
+                },
+                body: JSON.stringify({
+                    token: value,
+                    phone,
+                }),
+            })
+
+            if (response.ok) {
+                navigation.navigate('Splash')
+            } else {
+                Alert.alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
+                    dismissElements()
+                    goBack()
+                }) 
+    
+                //TODO: ERROR ANALYTICS
+                console.warn("Server error")
+            }
+        } catch(err) {
+            Alert.alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
+                dismissElements()
+                goBack()
+            }) 
+
+            //TODO: ERROR ANALYTICS
+            console.warn(err)
+        }
+    }
 
     return (
         <TouchableWithoutFeedback onPress={dismissElements} accessible={false}>
