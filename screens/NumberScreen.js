@@ -85,7 +85,7 @@ const NumberScreen = ({navigation}) => {
                         phone: numberString,
                     })
                 } else {
-                    Alert.alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
+                    Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
                         dismissElements()
                         clearTextField()  
                     }) 
@@ -94,7 +94,7 @@ const NumberScreen = ({navigation}) => {
                     console.warn("Server error")
                 }
             } catch(err) {
-                Alert.alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
+                Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
                     dismissElements()
                     clearTextField()  
                 })
@@ -103,7 +103,7 @@ const NumberScreen = ({navigation}) => {
                 console.warn(e)
             }
         } else {
-            Alert.alert(Locale.t('general.error'), Locale.t('number.notValid'), () => {
+            Alert(Locale.t('general.error'), Locale.t('number.notValid'), () => {
                 dismissElements()
                 clearTextField()  
             })

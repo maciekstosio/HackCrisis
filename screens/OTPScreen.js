@@ -11,6 +11,7 @@ import {
 import {
     Input,
     Button,
+    Alert,
 } from '../components'
 import Locale from '../locale'
 import { Ionicons } from '@expo/vector-icons'
@@ -41,7 +42,7 @@ const OTPScreen = ({route, navigation}) => {
                     routes: [{ name: 'Splash' }],
                 })
             } else {
-                Alert.alert(Locale.t('general.error'), Locale.t('otp.wrong'), () => {
+                Alert(Locale.t('general.error'), Locale.t('otp.wrong'), () => {
                     dismissElements()
                     goBack()
                 }) 
@@ -50,7 +51,7 @@ const OTPScreen = ({route, navigation}) => {
                 console.warn("Server error")
             }
         } catch(err) {
-            Alert.alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
+            Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
                 dismissElements()
                 goBack()
             }) 

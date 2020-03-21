@@ -102,7 +102,7 @@ export default {
     contact: {
         title: "Did you have direct contact with a COVID-19 positive person?",
         options: {
-            yes: {
+            nonhealthcare: {
                 title: "Yes, in a nonhealthcare setting",
                 options: {
                     protection: {
@@ -118,16 +118,17 @@ export default {
                     title: "Some other time",
                     risk: 1,
                 }
+            },
+            healthcare: {
+                title: "Yes, in a healthcare setting",
+                risk: 2,
             }
         },
-        yes2: {
-            title: "Yes, in a healthcare setting",
-            risk: 2,
+        no: {
+            title: "No",
+            risk: 1,
         }
     },
-    no: {
-        title: "No",
-        risk: 1,
-    }
 }
+
 

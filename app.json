@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "HackCrisis",
-    "slug": "hackcrisishackatonapppreview",
+    "name": "CovidBeacon",
+    "slug": "covidbeaconhackatonapppreview",
     "privacy": "unlisted",
     "sdkVersion": "36.0.0",
     "platforms": [

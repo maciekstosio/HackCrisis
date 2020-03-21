@@ -1,5 +1,5 @@
 export default {
-    name: 'ConvidScan',
+    name: 'CovidBeacon',
     general: {
         error: "Błąd",
         unexpectedError: 'Przepraszamy, wystapił nieoczekiwany błąd',
@@ -7,7 +7,7 @@ export default {
     login: {
         login: 'Zaloguj',
         selectCountry: 'Wybierz kraj',
-        notValid: 'Number not valid'
+        notValid: 'Niepoprawny numer'
     },
     otp: {
         confirm: 'Potwierdź',

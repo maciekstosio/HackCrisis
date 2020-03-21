@@ -12,6 +12,13 @@ const Stack = createStackNavigator();
 const StackNaviagtion = ({containerRef}) => (
     <NavigationContainer ref={containerRef}>
         <Stack.Navigator>
+            <Stack.Screen 
+                name="Splash" 
+                component={SplashScreen}
+                options={{
+                    headerShown: false,
+                }}
+            />
             <Stack.Screen
                 name="Number"
                 component={NumberScreen}
@@ -22,13 +29,6 @@ const StackNaviagtion = ({containerRef}) => (
             <Stack.Screen 
                 name="OTP" 
                 component={OTPScreen}
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <Stack.Screen 
-                name="Splash" 
-                component={SplashScreen}
                 options={{
                     headerShown: false,
                 }}

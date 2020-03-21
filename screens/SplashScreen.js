@@ -63,6 +63,7 @@ const SplashScreen = ({navigation, setUpPermission}) => {
                     imageAvailable,
                     name,
                     phoneNumbers: phoneNumbers.map(number => {
+                        if (!number.digits) return null
                         if (parsePhoneNumberFromString(number.digits)) {
                             return number.digits
                         } else {
@@ -108,74 +109,59 @@ const SplashScreen = ({navigation, setUpPermission}) => {
             const friendsNumbers = contacts.reduce((acc, curr) => [...acc, ...curr.phoneNumbers], [])
 
             try {
-                const responseProfile = await fetch(Config.api + '/api/user/profile', {
+                const profileConfig = {
                     method: 'POST',
                     headers:{
                         'Content-Type': 'application/json', 
                     },
                     body: JSON.stringify({
-                        pushNotificationId,
-                        ...location,
-                        locale: Locale.locale.split('-')[0]
+                        data: {
+                            pushNotificationId,
+                            ...location,
+                            locale: Locale.locale.split('-')[0]
+                        },
                     }),
-                    credentials: 'include',
-                })
+                    credentials: 'include'
+                }
 
-                const responseContacts = await fetch(Config.api + '/api/user/contacts', {
+                const contactsConfig = {
                     method: 'POST',
                     headers:{
                         'Content-Type': 'application/json', 
                     },
                     body: JSON.stringify({
-                        friends: friendsNumbers
+                        data: {
+                            friends: friendsNumbers
+                        }
                     }),
-                    credentials: 'include',
-                })
+                    credentials: 'include'
+                }
+                
+                const responseProfile = await fetch(Config.api + '/api/user/profile', profileConfig)
 
-            
-    
-                console.log("responseContacts", responseContacts.status, {
-                    method: 'POST',
-                    headers:{
-                        'Content-Type': 'application/json', 
-                    },
-                    body: JSON.stringify({
-                        pushNotificationId,
-                        ...location,
-                        locale: Locale.locale.split('-')[0]
-                    }),
-                })
+                const responseContacts = await fetch(Config.api + '/api/user/contacts', contactsConfig)
 
-                console.log("responseProfile", responseProfile.status, {
-                    method: 'POST',
-                    headers:{
-                        'Content-Type': 'application/json', 
-                    },
-                    body: JSON.stringify({
-                        friends: friendsNumbers
-                    }),
-                })
+                console.log("responseContacts", responseContacts.status, contactsConfig)
+                console.log("responseProfile", responseProfile.status, profileConfig)
 
                 if (responseProfile.ok && responseContacts.ok) {
-                    
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Dashboard' }],
+                    })
                 } else {
-                    Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
-                        navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'Number' }],
-                        })
-                    }) 
-    
-                    //TODO: ERROR ANALYTICS
-                    console.warn('Server error')
-                }
-            } catch(err) {    
-                Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
                     navigation.reset({
                         index: 0,
                         routes: [{ name: 'Number' }],
                     })
-                }) 
+                }
+            } catch(err) {    
+                Alert(Locale.t('general.error'), Locale.t('general.unexpectedError')) 
+
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Number' }],
+                })
 
                 navigation.reset({
                     index: 0,

@@ -2,10 +2,8 @@ import React, {useEffect, useState} from 'react'
 import { StyleSheet, View, Text, ActivityIndicator, ScrollView } from 'react-native'
 import Locale from '../locale'
 import get from 'lodash/get'
-
-//Development
-import surveyData from '../mocks/survey'
-import { Button } from '../components'
+import Config from '../config'
+import { Button, Alert } from '../components'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '../constants/Colors'
 
@@ -27,7 +25,21 @@ const SurveyScreen = ({ navigation }) => {
 
     
     useEffect(() => {
-        setSurvey(surveyData)
+        (async () => {
+            try {
+                const response = await fetch(Config.api + '/api/questionnaire', {credentials: 'include'})
+                const responseText = await response.text()
+                
+                setSurvey(JSON.parse(responseText))
+            } catch(err) {
+                navigation.goBack()
+
+                Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'))
+
+                //TODO: ERROR ANALYTICS
+                console.warn(err)
+            }
+        })()
     }, [])
 
     useEffect(() => {
@@ -50,19 +62,19 @@ const SurveyScreen = ({ navigation }) => {
             >      
                 <Ionicons name="md-flask" size={96} color={Colors.tintColor}/>    
             </View>
-            {isLoading ? <ActivityIndicator /> : renderSurvey(survey, outcome, step, setStep, setOutcome)}
+            {isLoading ? <ActivityIndicator /> : renderSurvey(survey, outcome, step, setStep, setOutcome, navigation)}
         </ScrollView>
     );
 }
 
-const renderSurvey = (survey, outcome, step, setStep, setOutcome) => {
+const renderSurvey = (survey, outcome, step, setStep, setOutcome, navigation) => {
     const steps = step
         .split('.options.')
         .reduce((acc, curr) => [...acc, acc.length > 0 ? acc[acc.length - 1] + '.options.' + curr : curr], [])
         .slice(0, -1)
-    const {title, long, options} = getSurveyData(survey, step)
+    const {title, options} = getSurveyData(survey, step)
     const optionsData = getOptions(options)
-    console.log(steps)
+
     return [
         <View style={{flex: 1}}>
             {renderPrevious(survey, steps)}
@@ -70,12 +82,12 @@ const renderSurvey = (survey, outcome, step, setStep, setOutcome) => {
         </View>,
         <View>
             {optionsData.map(option => <Button style={styles.button} title={option.title} onPress={() => setStep(step + '.options.' + option.key)}/>)}
-            {renderSummary(optionsData, step, survey, outcome, setOutcome, setStep)}
+            {renderSummary(optionsData, step, survey, outcome, setOutcome, setStep, navigation)}
         </View>
     ]
 }
 
-const renderSummary = (optionsData, step, survey, outcome, setOutcome, setStep) => {
+const renderSummary = (optionsData, step, survey, outcome, setOutcome, setStep, navigation) => {
     if (optionsData.length !== 0) return null
 
     const allSurveys = Object.keys(survey)
@@ -84,7 +96,7 @@ const renderSummary = (optionsData, step, survey, outcome, setOutcome, setStep) 
 
     if (indexOfCurrentSurvey < 0) return null
     if (indexOfCurrentSurvey + 1 < allSurveys.length) return renderNextButton(allSurveys[indexOfCurrentSurvey + 1], outcome, step, setStep, setOutcome)
-    return renderFinishButton(survey, step, outcome)
+    return renderFinishButton(survey, step, outcome, navigation)
 }
 
 const renderNextButton = (nextSurvey, outcome, step, setStep, setOutcome) => {
@@ -96,12 +108,45 @@ const renderNextButton = (nextSurvey, outcome, step, setStep, setOutcome) => {
     return <Button style={styles.button} title={Locale.t('survey.next')} onPress={onPress} />
 }
 
-const renderFinishButton = (survey, step, outcome) => {
+const renderFinishButton = (survey, step, outcome, navigation) => {
     const finalOutcome = [...outcome, step]
     const finalRisk = getFinalRisk(survey, finalOutcome)
 
-    const onPress = () => {
-        console.log(finalOutcome)
+    const onPress = async () => {
+        try {
+            const requestConfig = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify({
+                    data: {
+                        result: finalOutcome
+                    }
+                }),
+                credentials: 'include'
+            }
+
+            const response = await fetch(Config.api + '/api/submission', requestConfig)
+            
+            if (response.ok) {
+                navigation.goBack()
+            } else {
+                navigation.goBack()
+
+                Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'))
+    
+                //TODO: ERROR ANALYTICS
+                console.warn('Server error')
+            }
+        } catch(err) {
+            navigation.goBack()
+
+            Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'))
+
+            //TODO: ERROR ANALYTICS
+            console.warn(err)
+        }
     }
 
     return [
