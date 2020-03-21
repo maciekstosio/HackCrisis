@@ -16,7 +16,9 @@ export default function App(props) {
 		console.log("NOTIFICATION", notification)
 	};
 
-	Notifications.setBadgeNumberAsync(0)
+	if (Platform.OS === 'ios') {
+		Notifications.setBadgeNumberAsync(0)
+	}
 
 	useEffect(() => {
 		(async function loadResourcesAndDataAsync() {

@@ -28,6 +28,8 @@ export default {
     people: {
         title: "People",
         headerTitle: "Friends statuses",
+        search: "Search...",
+        noResults: "No results",
     },
     survey: {
         title: "Survey",

@@ -1,62 +1,108 @@
-import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
-import { ScrollView, FlatList } from 'react-native-gesture-handler';
-import * as Contacts from 'expo-contacts';
-import Colors from '../constants/Colors';
+import React, {useState, useEffect} from 'react'
+import {connect} from 'react-redux'
+import { StyleSheet, Text, View, Image, ActivityIndicator, FlatList } from 'react-native'
+import { Alert, Avatar, Input } from '../components'
+import Colors from '../constants/Colors'
+import Config from '../config'
+import Locale from '../locale'
+import { Ionicons } from '@expo/vector-icons'
 
-export default function PeopleScreen() {
-	const [contacts, setContacts] = useState([])
+const PeopleScreen = ({contacts}) => {
+	const [contactsDetails, setContactsDetails] = useState({})
 	const [isLoading, setIsLoading] = useState(false)
+	const [search, setSearch] = useState('')
+
+	const loadDetails = async () => {
+		try {
+			setIsLoading(true)
+			
+			const contactDetails = await getContactDetails()
+
+			setContactsDetails(contactDetails)
+		} catch(err) {
+			onError(err)
+		} finally {
+			setIsLoading(false)
+		}
+	}
+
 	useEffect(() => {
-		(async () => {
-			try {
-				setIsLoading(true)
-				const contacts = await getContacts()
-				setContacts(contacts)
-			} catch(err) {
-				console.error("ERROR", err)
-			} finally {
-				setIsLoading(false)
-			}
-		})();		
+		loadDetails()	
 	}, []);
 
+	const data = contacts
+		.filter(contact => contact.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		.sort((a, b) => ('' + a?.name).localeCompare(b?.name))
+
 	return (
-		<View>
-			{isLoading && <ActivityIndicator />}
+		<View style={styles.container}>
+			<View>
+				<Input 
+					value={search}
+					onChangeText={setSearch}
+					keyboardType="default"
+					placeholder={Locale.t('people.search')}
+					postElement={<Ionicons name="md-search" style={styles.searchIcon}/>}
+					style={styles.search}
+				/>
+			</View>
 			<FlatList
+				onRefresh={loadDetails}
 				refreshing={isLoading}
-				data={contacts}
-				renderItem={PersonRow}
+				data={data}
+				renderItem={({item}) => <PersonRow person={item} contactsDetails={contactsDetails} />}
 				keyExtractor={item => item.id}
+				ListEmptyComponent={NoResults}
 			/>
 		</View>
 	);
 }
 
-const getContacts = async () => {
-	const { status } = await Contacts.requestPermissionsAsync();
-	if (status === 'granted') {
-		const { data } = await Contacts.getContactsAsync({
-			fields: [Contacts.Fields.Image, Contacts.Fields.PhoneNumbers],
-		});
+const getContactDetails = async () => {
+	const response = await fetch(Config.api + '/api/user/contacts', {credentials: 'include'})
+				
+	if (__DEV__) {
+		console.log("friendsGET", response.status)
+	}
 
-		return data
+	if (response.ok) {
+		const parsedResponse = await response.json()
+
+		if (parsedResponse.contacts) {
+			return parsedResponse.contacts
+		} else {
+			onError()
+		}
 	} else {
-		//TODO SHOW MODAL TO CHANGE PERRMISSION
-		console.error("PERMISSION ERROR")
-		return []
+		onError()
 	}
 }
 
-const PersonRow = ({item}) => {
-	const {name} = item
+const NoResults = () => (
+	<View style={{flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10}}>
+		<Text>{Locale.t('people.noResults')}</Text>
+	</View>
+)
+
+const PersonRow = ({person, contactsDetails}) => {
+	const {name, phoneNumbers} = person
+	
+	const severities = phoneNumbers
+		.map(number => contactsDetails[number] && contactsDetails[number].severity)
+		.filter(Boolean)
+
+	const maxSeverity = Math.max(...severities)
+	const borderColor = getBorderColor(maxSeverity)
 
 	return (
 		<View style={styles.contactRowContainer}>
 			<View>
 				<Avatar
-					user={item}
+					user={person}
+					style={{
+						borderWidth: 5,
+						borderColor,
+					}}
 				/>	
 			</View>
 			<View style={styles.contentRowTextContainer}>
@@ -66,42 +112,27 @@ const PersonRow = ({item}) => {
 	)
 }
 
-const Avatar = ({user}) => {
-	const {image, imageAvailable, firstName, lastName} = user
-
-	if (imageAvailable) {
-		return (
-			<Image 
-				source={image}
-				style={avatarStyles.container}
-			/>
-		)
+const getBorderColor = severity => {
+	switch(severity) {
+		case 4:
+			return '#222'
+		case 3:
+			return '#666'
+		case 2:
+			return '#aaa'
+		case 1:
+			return '#ddd'
+		default:
+			return 'transparent'
 	}
-	const firstNameFirstLetter = firstName ? firstName.charAt(0).toUpperCase() : ''
-	const lastNameFirstLetter = lastName ? lastName.charAt(0).toUpperCase() : ''
-	const firstLetters = firstNameFirstLetter + lastNameFirstLetter
-
-	return (
-		<View style={avatarStyles.container}>
-			<Text style={avatarStyles.avatarText}>{firstLetters}</Text>
-		</View>
-	)
 }
 
-const avatarStyles = StyleSheet.create({
-	container: {
-		width: 60,
-		height: 60,
-		backgroundColor: Colors.gray,
-		borderRadius: 30,
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	avatarText: {
-		fontSize: 24
-	}
-})
+const onError = (err = 'Server error') => {
+    Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'))
+
+    //TODO: ERROR ANALYTICS
+    console.warn(err)
+}
 
 const styles = StyleSheet.create({
 	container: {
@@ -122,6 +153,21 @@ const styles = StyleSheet.create({
 	},
 	contentRowTextContainerName: {
 		color: Colors.dark,
-		fontSize: 16,
+		fontSize: 18,
+	},
+	search: {
+		paddingHorizontal: 5,
+		backgroundColor: Colors.background,
+		borderBottomWidth: StyleSheet.hairlineWidth,
+		borderBottomColor: Colors.gray, 
+	},
+	searchIcon: {
+		fontSize: 18,
 	}
 });
+
+const mapStateToProps = state => ({
+	contacts: state.friends,
+})
+
+export default connect(mapStateToProps)(PeopleScreen)

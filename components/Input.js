@@ -5,7 +5,7 @@ import {
     TextInput, 
 } from 'react-native'
 
-const Input = ({value, onChangeText, preElement, postElement}) => (
+const Input = ({value, onChangeText, preElement, postElement, keyboardType="phone-pad", style, ...props}) => (
     <View
         style={{
             backgroundColor: '#ddd',
@@ -13,7 +13,8 @@ const Input = ({value, onChangeText, preElement, postElement}) => (
             flexDirection: 'row',
             borderRadius: 3,
             alignItems: 'center',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            ...style,
         }}
     >
         {preElement}
@@ -24,8 +25,9 @@ const Input = ({value, onChangeText, preElement, postElement}) => (
                 fontSize: 20,
             }}
             onChangeText={onChangeText}
-            keyboardType="phone-pad"
+            keyboardType={keyboardType}
             value={value}
+            {...props}
         />
         {postElement}
     </View>

@@ -28,6 +28,8 @@ export default {
     people: {
         title: "Znajomi",
         headerTitle: "Status znajomych",
+        search: "Szukaj...",
+        noResults: "Brak wyników",
     },
     survey: {
         title: "Ankieta",

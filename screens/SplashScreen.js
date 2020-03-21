@@ -22,8 +22,11 @@ import {
  } from 'libphonenumber-js'
 import Locale from '../locale'
 import Config from '../config'
+import {
+    setFriends,
+} from '../store/actions/friends'
 
-const SplashScreen = ({navigation, setUpPermission}) => {
+const SplashScreen = ({navigation, setFriends}) => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -108,6 +111,7 @@ const SplashScreen = ({navigation, setUpPermission}) => {
             const pushNotificationId = await getPushNotificationId(notificationsPermission)
             const friendsNumbers = contacts.reduce((acc, curr) => [...acc, ...curr.phoneNumbers], [])
 
+
             try {
                 const profileConfig = {
                     method: 'POST',
@@ -130,19 +134,21 @@ const SplashScreen = ({navigation, setUpPermission}) => {
                         'Content-Type': 'application/json', 
                     },
                     body: JSON.stringify({
-                        data: {
-                            friends: friendsNumbers
-                        }
+                        data: friendsNumbers,
                     }),
                     credentials: 'include'
                 }
                 
+                setFriends(contacts)
+
                 const responseProfile = await fetch(Config.api + '/api/user/profile', profileConfig)
 
                 const responseContacts = await fetch(Config.api + '/api/user/contacts', contactsConfig)
 
-                console.log("responseContacts", responseContacts.status, contactsConfig)
-                console.log("responseProfile", responseProfile.status, profileConfig)
+                if (__DEV__) {
+                    console.log("contactsPOST", responseContacts.status, contactsConfig)
+                    console.log("profilePOST", responseProfile.status, profileConfig)
+                }
 
                 if (responseProfile.ok && responseContacts.ok) {
                     navigation.reset({
@@ -214,6 +220,4 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapStateToProps = (state, ownProps) => ({})
-
-export default connect(mapStateToProps)(SplashScreen)
+export default connect(null, { setFriends })(SplashScreen)

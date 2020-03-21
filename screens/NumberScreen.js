@@ -103,7 +103,7 @@ const NumberScreen = ({navigation}) => {
                 console.warn(e)
             }
         } else {
-            Alert(Locale.t('general.error'), Locale.t('number.notValid'), () => {
+            Alert(Locale.t('general.error'), Locale.t('login.notValid'), () => {
                 dismissElements()
                 clearTextField()  
             })

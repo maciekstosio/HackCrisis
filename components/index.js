@@ -4,6 +4,7 @@ import Modal from './Modal'
 import PickerList from './PickerList'
 import LanguagePrefix from './LanguagePrefix'
 import Alert from './Alert'
+import Avatar from './Avatar'
 
 export {
     Input,
@@ -12,4 +13,5 @@ export {
     PickerList,
     LanguagePrefix,
     Alert,
+    Avatar,
 }

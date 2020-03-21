@@ -30,6 +30,10 @@ const SurveyScreen = ({ navigation }) => {
                 const response = await fetch(Config.api + '/api/questionnaire', {credentials: 'include'})
                 const responseText = await response.text()
                 
+                if (__DEV__) {
+                    console.log("surveyGET", response.status)
+                }
+                
                 setSurvey(JSON.parse(responseText))
             } catch(err) {
                 navigation.goBack()
@@ -81,7 +85,7 @@ const renderSurvey = (survey, outcome, step, setStep, setOutcome, navigation) =>
             <Text style={rightMessageStyle(steps.length)}>{title}</Text>
         </View>,
         <View>
-            {optionsData.map(option => <Button style={styles.button} title={option.title} onPress={() => setStep(step + '.options.' + option.key)}/>)}
+            {optionsData.map(option => <Button style={styles.button} title={option.title} key={option.key} onPress={() => setStep(step + '.options.' + option.key)}/>)}
             {renderSummary(optionsData, step, survey, outcome, setOutcome, setStep, navigation)}
         </View>
     ]
@@ -105,7 +109,7 @@ const renderNextButton = (nextSurvey, outcome, step, setStep, setOutcome) => {
         setStep(nextSurvey)
     }
 
-    return <Button style={styles.button} title={Locale.t('survey.next')} onPress={onPress} />
+    return <Button style={styles.button} title={Locale.t('survey.next')} onPress={onPress} key="next"/>
 }
 
 const renderFinishButton = (survey, step, outcome, navigation) => {
@@ -129,6 +133,10 @@ const renderFinishButton = (survey, step, outcome, navigation) => {
 
             const response = await fetch(Config.api + '/api/submission', requestConfig)
             
+            if (__DEV__) {
+                console.log("surveyPost", response.status, requestConfig)
+            }
+
             if (response.ok) {
                 navigation.goBack()
             } else {
@@ -150,14 +158,14 @@ const renderFinishButton = (survey, step, outcome, navigation) => {
     }
 
     return [
-        <Text style={styles.riskText}>{Locale.t('survey.risk')} {Locale.t(`survey.riskLevel.${finalRisk}`)}</Text>,
-        <Button style={styles.button} title={Locale.t('survey.finish')} onPress={onPress} />
+        <Text style={styles.riskText} key="finalRisk">{Locale.t('survey.risk')} {Locale.t(`survey.riskLevel.${finalRisk}`)}</Text>,
+        <Button style={styles.button} title={Locale.t('survey.finish')} onPress={onPress} key="Finish" />
     ]
 }
 
 const renderPrevious = (survey, steps) => steps
     .map(step => getSurveyData(survey, step))
-    .map((step, index) => <Text style={rightMessageStyle(index)}>{step.title}</Text>)
+    .map((step, index) => <Text style={rightMessageStyle(index)} key={step}>{step.title}</Text>)
 
 const rightMessageStyle = value => value === 0 ? styles.blueMessage : styles.greyMessage
 
