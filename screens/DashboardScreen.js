@@ -4,8 +4,15 @@ import { useFocusEffect } from '@react-navigation/native'
 import { Button, Alert } from '../components'
 import Locale from '../locale'
 import Config from '../config'
+import { Ionicons } from '@expo/vector-icons'
 
 const DashboardScreen = ({ navigation }) => {
+    // navigation.setOptions({
+    //     headerRight: () => (
+    //       <Ionicons name="md-logout" size={20}/>
+    //     )
+    // })
+
     const startSurvey = () => navigation.navigate('Survey')
 
     useFocusEffect(() => {

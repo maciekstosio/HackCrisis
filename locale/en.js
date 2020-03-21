@@ -36,11 +36,5 @@ export default {
         next: "Next page",
         finish: "Finish survey",
         risk: "Your risk level is",
-        riskLevel: {
-            1: "no risk",
-            2: "low",
-            3: "medium",
-            4: "heigh",
-        }
     }
 }

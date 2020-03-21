@@ -1,0 +1,257 @@
+{
+    "sameindoor": {
+        "title": "Have you been in same indoor environment with a person with symptomatic laboratory-confirmed COVID-19",
+        "long": "Have you been in same indoor environment (such as classsroom, healthcare waiting room) with a person with symptomatic laboratory-confirmed COVID-19",
+        "options": {
+            "yes": {
+                "title": "Yes",
+                "options": {
+                    "day": {
+                        "title": "24 hours befor symptoms onset until after treatment",
+                        "options": {
+                            "facetoface": {
+                                "title": "face to face",
+                                "options": {
+                                    "less": {
+                                        "title": "less then 15min",
+                                        "category": 2
+                                    },
+                                    "more": {
+                                        "title": "more then 15min",
+                                        "category": 3
+                                    }
+                                }
+                            },
+                            "sharedspace": {
+                                "title": "in a shared space",
+                                "options": {
+                                    "less": {
+                                        "title": "less then 2h",
+                                        "category": 2
+                                    },
+                                    "more": {
+                                        "title": "more then 2h",
+                                        "category": 3
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "other": {
+                        "title": "Some other time",
+                        "category": 1
+                    }
+                }
+            },
+            "no": {
+                "title": "No",
+                "category": 1
+            }
+        }
+    },
+    "contact": {
+        "title": "Did you have direct contact with a COVID-19 positive person?",
+        "options": {
+            "nonhealthcare": {
+                "title": "Yes, in a nonhealthcare setting",
+                "options": {
+                    "protection": {
+                        "title": "while constantly using protective measures",
+                        "category": 3
+                    },
+                    "noprotection": {
+                        "title": "without protective measures",
+                        "category": 4
+                    }
+                },
+                "other": {
+                    "title": "Some other time",
+                    "category": 1
+                }
+            },
+            "healthcare": {
+                "title": "Yes, in a healthcare setting",
+                "category": 2
+            },
+            "no": {
+                "title": "No",
+                "category": 1
+            }
+        }
+    },
+    "safe_travels": {
+        "title": "I have been in the past 14 days in",
+        "options": {
+            "china": {
+                "title": "Mainland China",
+                "category": 4
+            },
+            "schengen": {
+                "title": "Europe (Schengen Area)",
+                "category": 4
+            },
+            "iran": {
+                "title": "Iran",
+                "category": 4
+            },
+            "malaysia": {
+                "title": "Malaysia",
+                "category": 4
+            },
+            "skorea": {
+                "title": "South Korea",
+                "category": 4
+            },
+            "uk": {
+                "title": "UK",
+                "category": 4
+            },
+            "other": {
+                "title": "other country",
+                "options": {
+                    "public": {
+                        "title": "I travelled public",
+                        "options": {
+                            "seat": {
+                                "title": "2 or less seats apart from a COVID-19 positive person.",
+                                "category": 3
+                            },
+                            "encounter": {
+                                "title": "I had contact with a COVID-19 positive person",
+                                "options": {
+                                    "facetoface": {
+                                        "title": "face to face",
+                                        "options": {
+                                            "less": {
+                                                "title": "less then 15min",
+                                                "category": 2
+                                            },
+                                            "more": {
+                                                "title": "more then 15min",
+                                                "category": 3
+                                            }
+                                        }
+                                    },
+                                    "sharedspace": {
+                                        "title": "In a shared space.",
+                                        "options": {
+                                            "less": {
+                                                "title": "less then 2h",
+                                                "category": 2
+                                            },
+                                            "more": {
+                                                "title": "more then 2h",
+                                                "category": 3
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "private": {
+                        "title": "I travelled private",
+                        "category": 1
+                    }
+                }
+            }
+        }
+    },
+    "age": {
+        "title": "Are you more than 65 years old?",
+        "options": {
+            "yes": {
+                "title": "yes",
+                "category": "moredeadly"
+            },
+            "no": {
+                "title": "no",
+                "category": "lessdeadly"
+            }
+        }
+    },
+    "diabetes": {
+        "title": "Are you diabetic?",
+        "options": {
+            "yes": {
+                "title": "yes",
+                "category": "moredeadly"
+
+            },
+            "no": {
+                "title": "no",
+                "category": "lessdeadly"
+            }
+        }
+    },
+    "heart": {
+        "title": "Do you have any heart disease?",
+        "options": {
+            "yes": {
+                "title": "yes",
+                "category": "moredeadly"
+            },
+            "no": {
+                "title": "no",
+                "category": "lessdeadly"
+            }
+        }
+    },
+    "lung": {
+        "title": "Do you have any lung disease?",
+        "options": {
+            "yes": {
+                "title": "yes",
+                "category": "moredeadly"
+            },
+            "no": {
+                "title": "no",
+                "category": "lessdeadly"
+            }
+        }
+    },
+    "immuno": {
+        "title": "Are you immunosupressed?",
+        "options": {
+            "yes": {
+                "title": "yes",
+                "category": "moredeadly"
+            },
+            "no": {
+                "title": "no",
+                "category": "lessdeadly"
+            }
+        }
+    },
+    "positive": {
+        "title": "Have you been positively tested for COVID-19?",
+        "options": {
+            "yes": {
+                "title": "Yes",
+                "options": {
+                    "symptoms": {
+                        "title": "and I have fever >38 degrees, cough and fatigue.",
+                        "category": 5
+                    },
+                    "nosymptoms": {
+                        "title": "and I have two or less symptoms of illness.",
+                        "category": 4
+                    }
+                }
+            },
+            "no": {
+                "title": "no",
+                "options": {
+                    "symptoms": {
+                        "title": "and I have fever >38 degrees, cough and fatigue.",
+                        "category": 4
+                    },
+                    "nosymptoms": {
+                        "title": "and I have two or less symptoms of illness.",
+                        "category": 1
+                    }
+                }
+            }
+        }
+    }
+}

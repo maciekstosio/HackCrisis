@@ -1,134 +1,80 @@
-export default {
-    sameindoor: {
-        title: "Have you been in same indoor environment with a person with symptomatic laboratory-confirmed COVID-19",
-        long: "Have you been in same indoor environment (such as classsroom, healthcare waiting room) with a person with symptomatic laboratory-confirmed COVID-19",
-        options: {
-            yes: {
-                title: "Yes",
-                options: {
-                    day: {
-                        title: "24 hours befor symptoms onset until after treatment",
-                        options: {
-                            facetoface: {
-                                title: "face to face",
-                                options: {
-                                    less: {
-                                        title: "less then 15min",
-                                        category: 2,
-                                    },
-                                    more: {
-                                        title: "more then 15min",
-                                        category: 3,
+safe_travels: {
+    title: "I have been in the past 14 days in",
+    options: {
+        china: {
+            title: "Mainland China",
+            risk: 4,
+        },
+        schengen: {
+            title: "Europe (Schengen Area)",
+            risk: 4,
+        },
+        iran: {
+            title: "Iran",
+            risk: 4,
+        },
+        malaysia: {
+            title: "Malaysia",
+            risk: 4,
+        },
+        skorea: {
+            title: "South Korea",
+            risk: 4,
+        },
+        uk: {
+            title: "UK",
+            risk: 4,
+        },
+        other: {
+            title: "other country",
+            options: {
+                public: {
+                    title: "I travelled public",
+                    options: {
+                        seat: {
+                            title: "2 or less seats apart from a COVID-19 positive person.",
+                            risk: 3,
+                        },
+                        encounter: {
+                            title: "I had contact with a COVID-19 positive person",
+                            options: {
+                                facetoface: {
+                                    title: "face to face",
+                                    options: {
+                                        less: {
+                                            title: "less then 15min",
+                                            category: 2,
+                                        },
+                                        more: {
+                                            title: "more then 15min",
+                                            category: 3,
+                                        }
                                     }
-                                }
-                            },
-                            sharedspace: {
-                                title: "in a shared space",
-                                options: {
-                                    less: {
-                                        title: "less then 2h",
-                                        category: 2,
-                                    },
-                                    more: {
-                                        title: "more then 2h",
-                                        category: 3
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    other: {
-                        title: "Some other time",
-                        risk: 1
-                    }
-                }
-            },
-            no: {
-                title: "No",
-                risk: 1,
-            }
-        }
-    },
-    sameindoor2: {
-        title: "[2] Have you been in same indoor environment with a person with symptomatic laboratory-confirmed COVID-19",
-        long: "Have you been in same indoor environment (such as classsroom, healthcare waiting room) with a person with symptomatic laboratory-confirmed COVID-19",
-        options: {
-            yes: {
-                title: "[2] Yes",
-                options: {
-                    day: {
-                        title: "[2] 24 hours befor symptoms onset until after treatment",
-                        options: {
-                            facetoface: {
-                                title: "[2] face to face",
-                                options: {
-                                    less: {
-                                        title: "[2] less then 15min",
-                                        category: 2,
-                                    },
-                                    more: {
-                                        title: "[2] more then 15min",
-                                        category: 3,
-                                    }
-                                }
-                            },
-                            sharedspace: {
-                                title: "[2] in a shared space",
-                                options: {
-                                    less: {
-                                        title: "[2] less then 2h",
-                                        category: 2,
-                                    },
-                                    more: {
-                                        title: "[2] more then 2h",
-                                        category: 3
+                                },
+                                sharedspace: {
+                                    title: "In a shared space.",
+                                    options: {
+                                        less: {
+                                            title: "less then 2h",
+                                            category: 2,
+                                        },
+                                        more: {
+                                            title: "more then 2h",
+                                            category: 3
+                                        }
                                     }
                                 }
                             }
                         }
-                    },
-                    other: {
-                        title: "[2] Some other time",
-                        risk: 1
-                    }
-                }
-            },
-            no: {
-                title: "[2] No",
-                risk: 1,
-            }
-        }
-    },
-    contact: {
-        title: "Did you have direct contact with a COVID-19 positive person?",
-        options: {
-            nonhealthcare: {
-                title: "Yes, in a nonhealthcare setting",
-                options: {
-                    protection: {
-                        title: "while constantly using protective measures",
-                        category: 3,
-                    },
-                    noprotection: {
-                        title: "without protective measures",
-                        category: 4,
                     }
                 },
-                other: {
-                    title: "Some other time",
+                private: {
+                    title: "I travelled private",
                     risk: 1,
                 }
-            },
-            healthcare: {
-                title: "Yes, in a healthcare setting",
-                risk: 2,
             }
-        },
-        no: {
-            title: "No",
-            risk: 1,
         }
-    },
+    }
 }
 
 

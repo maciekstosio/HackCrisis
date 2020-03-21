@@ -114,7 +114,6 @@ const renderNextButton = (nextSurvey, outcome, step, setStep, setOutcome) => {
 
 const renderFinishButton = (survey, step, outcome, navigation) => {
     const finalOutcome = [...outcome, step]
-    const finalRisk = getFinalRisk(survey, finalOutcome)
 
     const onPress = async () => {
         try {
@@ -157,10 +156,7 @@ const renderFinishButton = (survey, step, outcome, navigation) => {
         }
     }
 
-    return [
-        <Text style={styles.riskText} key="finalRisk">{Locale.t('survey.risk')} {Locale.t(`survey.riskLevel.${finalRisk}`)}</Text>,
-        <Button style={styles.button} title={Locale.t('survey.finish')} onPress={onPress} key="Finish" />
-    ]
+    return <Button style={styles.button} title={Locale.t('survey.finish')} onPress={onPress} key="Finish" />
 }
 
 const renderPrevious = (survey, steps) => steps
@@ -170,8 +166,6 @@ const renderPrevious = (survey, steps) => steps
 const rightMessageStyle = value => value === 0 ? styles.blueMessage : styles.greyMessage
 
 const getOptions = options => Object.keys(options).map(option => getSurveyData(options, option))
-
-const getFinalRisk = (survey, outcome) =>  Math.max(...outcome.map(o => get(survey, o + '.category', 1)))
 
 const getSurveyData = (survey, step) => ({
     key: step,

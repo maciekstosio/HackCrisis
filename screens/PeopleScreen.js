@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
 		borderBottomColor: Colors.gray, 
 	},
 	searchIcon: {
-		fontSize: 18,
+		fontSize: 22,
 	}
 });
 
