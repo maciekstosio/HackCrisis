@@ -1,7 +1,7 @@
 export default {
     sameindoor: {
         title: "Have you been in same indoor environment with a person with symptomatic laboratory-confirmed COVID-19",
-        long:  "Have you been in same indoor environment (such as classsroom, healthcare waiting room) with a person with symptomatic laboratory-confirmed COVID-19",
+        long: "Have you been in same indoor environment (such as classsroom, healthcare waiting room) with a person with symptomatic laboratory-confirmed COVID-19",
         options: {
             yes: {
                 title: "Yes",
@@ -51,7 +51,7 @@ export default {
     },
     sameindoor2: {
         title: "[2] Have you been in same indoor environment with a person with symptomatic laboratory-confirmed COVID-19",
-        long:  "Have you been in same indoor environment (such as classsroom, healthcare waiting room) with a person with symptomatic laboratory-confirmed COVID-19",
+        long: "Have you been in same indoor environment (such as classsroom, healthcare waiting room) with a person with symptomatic laboratory-confirmed COVID-19",
         options: {
             yes: {
                 title: "[2] Yes",
@@ -98,5 +98,36 @@ export default {
                 risk: 1,
             }
         }
+    },
+    contact: {
+        title: "Did you have direct contact with a COVID-19 positive person?",
+        options: {
+            yes: {
+                title: "Yes, in a nonhealthcare setting",
+                options: {
+                    protection: {
+                        title: "while constantly using protective measures",
+                        category: 3,
+                    },
+                    noprotection: {
+                        title: "without protective measures",
+                        category: 4,
+                    }
+                },
+                other: {
+                    title: "Some other time",
+                    risk: 1,
+                }
+            }
+        },
+        yes2: {
+            title: "Yes, in a healthcare setting",
+            risk: 2,
+        }
+    },
+    no: {
+        title: "No",
+        risk: 1,
     }
 }
+

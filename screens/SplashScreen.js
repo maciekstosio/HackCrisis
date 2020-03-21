@@ -5,6 +5,9 @@ import {
     View, 
     Animated
 } from 'react-native'
+import {
+    Alert,
+} from '../components'
 import { Ionicons } from '@expo/vector-icons'
 import registerForPushNotificationsAsync from '../services/pushNotification'
 import Colors from '../constants/Colors'
@@ -18,12 +21,12 @@ import {
     parsePhoneNumberFromString,
  } from 'libphonenumber-js'
 import Locale from '../locale'
+import Config from '../config'
 
 const SplashScreen = ({navigation, setUpPermission}) => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-
         (async () => {
             const getLocation = async permission => {
                 if (!permission) return {
@@ -104,7 +107,84 @@ const SplashScreen = ({navigation, setUpPermission}) => {
             const pushNotificationId = await getPushNotificationId(notificationsPermission)
             const friendsNumbers = contacts.reduce((acc, curr) => [...acc, ...curr.phoneNumbers], [])
 
-            console.log("data", contacts, friendsNumbers, location, pushNotificationId)
+            try {
+                const responseProfile = await fetch(Config.api + '/api/user/profile', {
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json', 
+                    },
+                    body: JSON.stringify({
+                        pushNotificationId,
+                        ...location,
+                        locale: Locale.locale.split('-')[0]
+                    }),
+                    credentials: 'include',
+                })
+
+                const responseContacts = await fetch(Config.api + '/api/user/contacts', {
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json', 
+                    },
+                    body: JSON.stringify({
+                        friends: friendsNumbers
+                    }),
+                    credentials: 'include',
+                })
+
+            
+    
+                console.log("responseContacts", responseContacts.status, {
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json', 
+                    },
+                    body: JSON.stringify({
+                        pushNotificationId,
+                        ...location,
+                        locale: Locale.locale.split('-')[0]
+                    }),
+                })
+
+                console.log("responseProfile", responseProfile.status, {
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json', 
+                    },
+                    body: JSON.stringify({
+                        friends: friendsNumbers
+                    }),
+                })
+
+                if (responseProfile.ok && responseContacts.ok) {
+                    
+                } else {
+                    Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Number' }],
+                        })
+                    }) 
+    
+                    //TODO: ERROR ANALYTICS
+                    console.warn('Server error')
+                }
+            } catch(err) {    
+                Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Number' }],
+                    })
+                }) 
+
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Number' }],
+                })
+
+                //TODO: ERROR ANALYTICS
+                console.warn(err)
+            }
         })()
 
         Animated.loop(

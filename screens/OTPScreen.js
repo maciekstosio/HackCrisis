@@ -36,9 +36,12 @@ const OTPScreen = ({route, navigation}) => {
             })
 
             if (response.ok) {
-                navigation.navigate('Splash')
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Splash' }],
+                })
             } else {
-                Alert.alert(Locale.t('general.error'), Locale.t('general.unexpectedError'), () => {
+                Alert.alert(Locale.t('general.error'), Locale.t('otp.wrong'), () => {
                     dismissElements()
                     goBack()
                 }) 

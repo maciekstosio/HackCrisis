@@ -1,14 +1,20 @@
 export default {
-    name: 'HackCrisis',
+    name: 'ConvidScan',
+    general: {
+        error: "Błąd",
+        unexpectedError: 'Przepraszamy, wystapił nieoczekiwany błąd',
+    },
     login: {
         login: 'Zaloguj',
         selectCountry: 'Wybierz kraj',
+        notValid: 'Number not valid'
     },
     otp: {
         confirm: 'Potwierdź',
         enterCode: 'Wprowadź kod z SMS',
         back: 'Powrót do logowania',
         noSMS: 'Brak kodu SMS?',
+        wrong: 'Podano błędny kod',
     },
     status: {
         title: "Status",
