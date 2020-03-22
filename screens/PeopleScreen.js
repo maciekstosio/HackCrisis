@@ -70,7 +70,7 @@ const getContactDetails = async () => {
 
 		console.log(parsedResponse)
 		
-		
+
 		if (parsedResponse.contacts) {
 			return parsedResponse.contacts
 		} else {

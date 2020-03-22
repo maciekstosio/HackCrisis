@@ -40,10 +40,13 @@ export default function BottomTabNavigator({ navigation, route }) {
 				/>
 				<BottomTab.Screen
 					name="Dashboard"
-					component={props => <DashboardScreen {...props} parentNavigation={navigation}/>}
+					component={DashboardScreen}
 					options={{
 						title: Locale.t('dashboard.title'),
 						tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
+					}}
+					initialParams={{
+						parentNavigation: navigation,
 					}}
 				/>
 				<BottomTab.Screen

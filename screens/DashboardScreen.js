@@ -13,7 +13,7 @@ import Config from '../config'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '../constants/Colors'
 
-const DashboardScreen = ({ navigation, parentNavigation }) => {    
+const DashboardScreen = ({route, navigation }) => {    
     const [details, setDetails] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const [isPrivacyModalVisible, setIsPrivacyModalVisible] = useState(false)
@@ -43,7 +43,31 @@ const DashboardScreen = ({ navigation, parentNavigation }) => {
         }
     }
 
-    logOut = async () => {
+    const setPrivacyRule = async (isVisible) => {
+        try {
+            setIsLoading(true)
+            const response = await fetch(Config.api + '/api/user/profile', {credentials: 'include'})
+            
+            if (__DEV__) {
+                console.log("dashboardGet", response.status)
+            }
+
+            if (response.ok) {
+                const parsedResponse = await response.json()
+                const { category } = parsedResponse
+
+                setDetails(parsedResponse)
+            } else {
+                onError()
+            }
+        } catch(err) {
+            onError(err)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const logOut = async () => {
         try {
             const response = await fetch(Config.api + '/auth/logout', {
                 credentials: 'include',
@@ -68,18 +92,27 @@ const DashboardScreen = ({ navigation, parentNavigation }) => {
         loadData()
     }, [])
 
-    parentNavigation.setOptions({ 
-		headerLeft: () => (
-            <TouchableOpacity onPress={logOut} style={{padding: 10}}>
-                <Ionicons name="ios-lock" color={Colors.white} size={26} />
-            </TouchableOpacity>
-        ),
-        headerRight: () => (
-            <TouchableOpacity style={{padding: 10}}>
-                <Ionicons name="ios-cog" color={Colors.white} size={26} />
-            </TouchableOpacity>
-        )
-    })
+    useFocusEffect(() => {
+        route?.params?.parentNavigation?.setOptions({ 
+            headerLeft: () => (
+                <TouchableOpacity style={{padding: 10}} onPress={logOut} >
+                    <Ionicons name="ios-lock" color={Colors.white} size={26} />
+                </TouchableOpacity>
+            ),
+            headerRight: () => (
+                <TouchableOpacity style={{padding: 10}} onPress={() => setIsPrivacyModalVisible(true)}>
+                    <Ionicons name="ios-cog" color={Colors.white} size={26} />
+                </TouchableOpacity>
+            )
+        })
+
+        return () => {
+            route?.params?.parentNavigation?.setOptions({ 
+                headerLeft: () => {},
+                headerRight: () => {}
+            })
+        }
+    }, [])
     
     const category = details?.category ?? null
 
@@ -96,7 +129,7 @@ const DashboardScreen = ({ navigation, parentNavigation }) => {
             </ScrollView>
             {isPrivacyModalVisible && <Modal 
                 headerTitle={Locale.t('privacy.title')}
-                onCloseClick={() => setPickerVisibility(false)}
+                onCloseClick={() => setIsPrivacyModalVisible(false)}
             >
                 <View style={{justifyContent: 'space-between', flex: 1}}>
                     <View style={{alignItems: 'center'}}>
