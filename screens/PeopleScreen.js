@@ -68,6 +68,9 @@ const getContactDetails = async () => {
 	if (response.ok) {
 		const parsedResponse = await response.json()
 
+		console.log(parsedResponse)
+		
+		
 		if (parsedResponse.contacts) {
 			return parsedResponse.contacts
 		} else {

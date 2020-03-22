@@ -12,10 +12,10 @@ const SurveyScreen = ({ navigation }) => {
     navigation.setOptions({ 
 		headerTitle: Locale.t('survey.title'),
 		headerStyle: {
-			height: 70,
-			backgroundColor: '#ff375f',
-		  },
-		  headerTintColor: '#fff',
+            height: 70,
+            backgroundColor: '#ff375f',
+        },
+        headerTintColor: '#fff',
     })
 
     const [isLoading, setIsLoading] = useState(true)
@@ -82,7 +82,7 @@ const renderSurvey = (survey, outcome, step, setStep, setOutcome, navigation) =>
     return [
         <View style={{flex: 1}}>
             {renderPrevious(survey, steps)}
-            <Text style={rightMessageStyle(steps.length)}>{title}</Text>
+            <View style={styles.radius}><Text style={rightMessageStyle(steps.length)}>{title}</Text></View>
         </View>,
         <View>
             {optionsData.map(option => <Button style={styles.button} title={option.title} key={option.key} onPress={() => setStep(step + '.options.' + option.key)}/>)}
@@ -161,7 +161,7 @@ const renderFinishButton = (survey, step, outcome, navigation) => {
 
 const renderPrevious = (survey, steps) => steps
     .map(step => getSurveyData(survey, step))
-    .map((step, index) => <Text style={rightMessageStyle(index)} key={step}>{step.title}</Text>)
+    .map((step, index) => <View style={styles.radius}><Text style={rightMessageStyle(index)} key={step}>{step.title}</Text></View>)
 
 const rightMessageStyle = value => value === 0 ? styles.blueMessage : styles.greyMessage
 
@@ -195,22 +195,21 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
     },
+    radius: {
+        borderRadius: 6,
+        marginBottom: 10,
+        overflow: 'hidden',
+    },
     blueMessage: {
         backgroundColor: Colors.blue,
         fontSize: 18,
         padding: 5,
-        borderRadius: 6,
-        marginBottom: 10,
-        fontSize: 18,
         color: Colors.white,
     },
     greyMessage: {
         backgroundColor: Colors.gray,
         fontSize: 18,
         padding: 5,
-        borderRadius: 6,
-        marginBottom: 10,
-        fontSize: 18,
         color: Colors.dark,
     },
 });

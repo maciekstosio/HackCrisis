@@ -6,21 +6,19 @@ import StatusScreen from '../screens/StatusScreen';
 import PeopleScreen from '../screens/PeopleScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import Locale from '../locale'
+import Colors from '../constants/Colors'
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Dashboard';
 
 export default function BottomTabNavigator({ navigation, route }) {
-	// Set the header title on the parent stack navigator depending on the
-	// currently active tab. Learn more in the documentation:
-	// https://reactnavigation.org/docs/en/screen-options-resolution.html
 	navigation.setOptions({ 
 		headerTitle: getHeaderTitle(route),
 		headerStyle: {
 			height: 70,
-			backgroundColor: '#ff375f',
-		  },
-		  headerTintColor: '#fff',
+			backgroundColor: Colors.tintColor,
+		},
+		headerTintColor: '#fff',
 	})
 
 	return (
@@ -28,6 +26,9 @@ export default function BottomTabNavigator({ navigation, route }) {
 			{Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
 			<BottomTab.Navigator
 				initialRouteName={INITIAL_ROUTE_NAME}
+				tabBarOptions={{
+					activeTintColor: Colors.tintColor,
+				}}
 			>
 				<BottomTab.Screen
 					name="Status"
@@ -39,7 +40,7 @@ export default function BottomTabNavigator({ navigation, route }) {
 				/>
 				<BottomTab.Screen
 					name="Dashboard"
-					component={DashboardScreen}
+					component={props => <DashboardScreen {...props} parentNavigation={navigation}/>}
 					options={{
 						title: Locale.t('dashboard.title'),
 						tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,

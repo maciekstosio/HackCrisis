@@ -3,6 +3,8 @@ export default {
     general: {
         error: "Błąd",
         unexpectedError: 'Przepraszamy, wystapił nieoczekiwany błąd',
+        yes: "Tak",
+        no: "Nie",
     },
     login: {
         login: 'Zaloguj',
@@ -22,8 +24,9 @@ export default {
     },
     dashboard: {
         title: "Wiadomości",
-        headerTitle: "HackCrisis",
+        headerTitle: "CovidBeacon",
         survey: "Rozpocznij ankiete",
+        noData: "Aby poznać swoje zalecenia uzupełnij ankietę",
     },
     people: {
         title: "Znajomi",
@@ -35,5 +38,9 @@ export default {
         title: "Ankieta",
         next: "Następna strona",
         finish: "Zakończ ankietę",
-    }
+    },
+    privacy: {
+        title: "Prywatność",
+        description: "Czy zgadzasz się, aby osoby z twoich kontaktów widziały Twój aktualny stan?",
+    },
 }

@@ -3,6 +3,8 @@ export default {
     general: {
         error: "Error",
         unexpectedError: 'Unexpected error has occured',
+        yes: "Yes",
+        no: "No",
     },
     login: {
         login: 'Login',
@@ -22,8 +24,9 @@ export default {
     },
     dashboard: {
         title: "News",
-        headerTitle: "HackCrisis",
+        headerTitle: "CovidBeacon",
         survey: "Start survey",
+        noData: "Please fill survey to get your recomendations",
     },
     people: {
         title: "People",
@@ -36,5 +39,9 @@ export default {
         next: "Next page",
         finish: "Finish survey",
         risk: "Your risk level is",
-    }
+    },
+    privacy: {
+        title: "Privacy",
+        description: "Do you want to allow users from your contacts to see youre current state?",
+    },
 }
