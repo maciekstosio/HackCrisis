@@ -20,7 +20,7 @@ export default function App(props) {
 		(async function loadResourcesAndDataAsync() {
 			try {
 				SplashScreen.preventAutoHide();
-				Notifications.addListener(handleNotification)
+
 				await Font.loadAsync({
 					...Ionicons.font,
 					'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),

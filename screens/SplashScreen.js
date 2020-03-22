@@ -9,7 +9,6 @@ import {
     Alert,
 } from '../components'
 import { Ionicons } from '@expo/vector-icons'
-import registerForPushNotificationsAsync from '../services/pushNotification'
 import Colors from '../constants/Colors'
 import { Notifications } from 'expo'
 import * as Permissions from 'expo-permissions'

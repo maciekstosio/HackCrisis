@@ -122,7 +122,7 @@ const PersonRow = ({person, contactsDetails, index}) => {
 			</View>
 			<View style={styles.contentRowTextContainer}>
 				<Text style={styles.contentRowTextContainerName}>{name}</Text>
-				<Text style={styles.contentRowSubTextContainerName}>{Locale.t('people.status')} {getStatus(index % 5 + 1)}</Text>
+				<Text style={styles.contentRowSubTextContainerName}>{Locale.t('people.status')} {getStatus(maxSeverity)}</Text>
 			</View>
 		</View>
 	)
