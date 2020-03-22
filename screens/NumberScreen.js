@@ -70,7 +70,7 @@ const NumberScreen = ({navigation}) => {
             clearTextField()
             
             try {
-                const response = await fetch(Config.api + '/auth/request_token', {
+                const requestConfig = {
                     method: 'POST',
                     headers:{
                         'Content-Type':'application/json', 
@@ -78,7 +78,13 @@ const NumberScreen = ({navigation}) => {
                     body: JSON.stringify({
                         phone: numberString,
                     }),
-                })
+                }
+                
+                const response = await fetch(Config.api + '/auth/request_token', requestConfig)
+
+                if (__DEV__) {
+                    console.log("authPOST", response.status, requestConfig)
+                }
 
                 if (response.ok) {
                     navigation.navigate('OTP', {

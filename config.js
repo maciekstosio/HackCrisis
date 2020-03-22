@@ -1,3 +1,3 @@
 export default {
-    api: "https://covidbeacon.eu/",
+    api: "https://covidbeacon.eu",
 }
