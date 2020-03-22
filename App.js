@@ -12,10 +12,6 @@ export default function App(props) {
 	const [isLoadingComplete, setLoadingComplete] = useState(false)
 	const containerRef = useRef()
 
-	const handleNotification = notification => {
-		console.log("NOTIFICATION", notification)
-	};
-
 	if (Platform.OS === 'ios') {
 		Notifications.setBadgeNumberAsync(0)
 	}
@@ -44,7 +40,6 @@ export default function App(props) {
 		<View style={styles.container}>
 			{Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
 			<Provider store={store}>
-				{console.log("Store", store.getState())}
 				<StackNaviagtion containerRef={containerRef} />
 			</Provider>
 		</View>
