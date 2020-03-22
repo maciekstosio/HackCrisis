@@ -17,7 +17,6 @@ const DashboardScreen = ({route, navigation }) => {
     const [details, setDetails] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const [isPrivacyModalVisible, setIsPrivacyModalVisible] = useState(false)
-    const startSurvey = () => navigation.navigate('Survey')
 
     const loadData = async () => {
         try {
@@ -30,7 +29,10 @@ const DashboardScreen = ({route, navigation }) => {
 
             if (response.ok) {
                 const parsedResponse = await response.json()
-                const { category } = parsedResponse
+                
+                if (parsedResponse.sharepermission === null) {
+                    setIsPrivacyModalVisible(true) 
+                } 
 
                 setDetails(parsedResponse)
             } else {
@@ -43,27 +45,32 @@ const DashboardScreen = ({route, navigation }) => {
         }
     }
 
-    const setPrivacyRule = async (isVisible) => {
+    const setPrivacyRule = async sharepermission => {
         try {
-            setIsLoading(true)
-            const response = await fetch(Config.api + '/api/user/profile', {credentials: 'include'})
-            
-            if (__DEV__) {
-                console.log("dashboardGet", response.status)
+            setIsPrivacyModalVisible(false)
+
+            const requestConfig = {
+                credentials: 'include',
+                method: 'POST',
+                headers:{
+                    'Content-Type':'application/json', 
+                },
+                body: JSON.stringify({
+                    data: sharepermission,
+                }),
             }
 
-            if (response.ok) {
-                const parsedResponse = await response.json()
-                const { category } = parsedResponse
+            const response = await fetch(Config.api + '/api/user/sharepermission', requestConfig)
+            
+            if (__DEV__) {
+                console.log("postPermission", response.status, requestConfig)
+            }
 
-                setDetails(parsedResponse)
-            } else {
+            if (!response.ok) {
                 onError()
             }
         } catch(err) {
             onError(err)
-        } finally {
-            setIsLoading(false)
         }
     }
 
@@ -87,6 +94,8 @@ const DashboardScreen = ({route, navigation }) => {
             console.warn(err)
         }
     }
+
+    const startSurvey = () => navigation.navigate('Survey', { loadData })
 
     useEffect(() => {
         loadData()
@@ -138,8 +147,8 @@ const DashboardScreen = ({route, navigation }) => {
                     
                     <Text style={{fontSize: 18, textAlign: 'center'}}>{Locale.t('privacy.description')}</Text>
 
-                    <Button title={Locale.t('general.yes')} />
-                    <Button title={Locale.t('general.no')} />
+                    <Button title={Locale.t('general.yes')} onPress={() => setPrivacyRule(true)} />
+                    <Button title={Locale.t('general.no')} onPress={() => setPrivacyRule(false)} />
                 </View>
             </Modal>}
         </View>
@@ -175,7 +184,6 @@ const showRecomendations = (details, startSurvey) => {
     const separate = details?.separate ?? []
     const moreDeadly = separate.find(option => option.category === "moredeadly")
 
-    console.log(recommendation)
     const Icon = ({severity}) => {
         switch(severity) {
             case 1:

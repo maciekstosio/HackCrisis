@@ -50,7 +50,7 @@ const PeopleScreen = ({contacts}) => {
 				onRefresh={loadDetails}
 				refreshing={isLoading}
 				data={data}
-				renderItem={({item}) => <PersonRow person={item} contactsDetails={contactsDetails} />}
+				renderItem={({item, index}) => <PersonRow person={item} index={index} contactsDetails={contactsDetails} />}
 				keyExtractor={item => item.id}
 				ListEmptyComponent={NoResults}
 			/>
@@ -66,10 +66,7 @@ const getContactDetails = async () => {
 	}
 
 	if (response.ok) {
-		const parsedResponse = await response.json()
-
-		console.log(parsedResponse)
-		
+		const parsedResponse = await response.json()		
 
 		if (parsedResponse.contacts) {
 			return parsedResponse.contacts
@@ -87,12 +84,15 @@ const NoResults = () => (
 	</View>
 )
 
-const PersonRow = ({person, contactsDetails}) => {
+const PersonRow = ({person, contactsDetails, index}) => {
 	const {name, phoneNumbers} = person
-	
+
 	const severities = phoneNumbers
-		.map(number => contactsDetails[number] && contactsDetails[number].severity)
+		.map(number => contactsDetails[number]?.severity)
 		.filter(Boolean)
+
+	const isMoreDeadly = phoneNumbers
+		.some(number => contactsDetails[number]?.separate?.includes("moredeadly"))
 
 	const maxSeverity = Math.max(...severities)
 	const borderColor = getBorderColor(maxSeverity)
@@ -103,13 +103,26 @@ const PersonRow = ({person, contactsDetails}) => {
 				<Avatar
 					user={person}
 					style={{
-						borderWidth: 5,
+						borderWidth: 1,
 						borderColor,
 					}}
 				/>	
+
+				{isMoreDeadly && (
+					<View 
+						style={{
+							position: 'absolute',
+							top: -3,
+							right: -3,
+						}}
+					>
+						<Ionicons name="md-warning" color="#ff0000" size={20} />
+					</View>
+				)}
 			</View>
 			<View style={styles.contentRowTextContainer}>
 				<Text style={styles.contentRowTextContainerName}>{name}</Text>
+				<Text style={styles.contentRowSubTextContainerName}>{Locale.t('people.status')} {getStatus(index % 5 + 1)}</Text>
 			</View>
 		</View>
 	)
@@ -117,16 +130,35 @@ const PersonRow = ({person, contactsDetails}) => {
 
 const getBorderColor = severity => {
 	switch(severity) {
+		case 5:
+			return '#ff4000'
 		case 4:
-			return '#222'
+			return '#ffbf00'
 		case 3:
-			return '#666'
+			return '#fbff00'
 		case 2:
-			return '#aaa'
+			return '#8fecff'
 		case 1:
-			return '#ddd'
+			return '#00ff55'
 		default:
 			return 'transparent'
+	}
+}
+
+const getStatus = severity => {
+	switch(severity) {
+		case 5:
+			return 'Infected'
+		case 4:
+			return 'High risk'
+		case 3:
+			return 'Medium risk'
+		case 2:
+			return 'Low risk'
+		case 1:
+			return 'No risk'
+		default:
+			return 'Unknown'
 	}
 }
 
@@ -158,6 +190,10 @@ const styles = StyleSheet.create({
 		color: Colors.dark,
 		fontSize: 18,
 	},
+	contentRowSubTextContainerName: {
+		color: Colors.dark,
+		fontSize: 14,
+	},
 	search: {
 		paddingHorizontal: 5,
 		backgroundColor: Colors.background,
@@ -166,6 +202,7 @@ const styles = StyleSheet.create({
 	},
 	searchIcon: {
 		fontSize: 22,
+		paddingRight: 5,
 	}
 });
 

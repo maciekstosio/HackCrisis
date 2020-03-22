@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons'
 import Colors from '../constants/Colors'
 
 
-const SurveyScreen = ({ navigation }) => {
+const SurveyScreen = ({ route, navigation }) => {
     navigation.setOptions({ 
 		headerTitle: Locale.t('survey.title'),
 		headerStyle: {
@@ -66,12 +66,12 @@ const SurveyScreen = ({ navigation }) => {
             >      
                 <Ionicons name="md-flask" size={96} color={Colors.tintColor}/>    
             </View>
-            {isLoading ? <ActivityIndicator /> : renderSurvey(survey, outcome, step, setStep, setOutcome, navigation)}
+            {isLoading ? <ActivityIndicator /> : renderSurvey(survey, outcome, step, setStep, setOutcome, navigation, route)}
         </ScrollView>
     );
 }
 
-const renderSurvey = (survey, outcome, step, setStep, setOutcome, navigation) => {
+const renderSurvey = (survey, outcome, step, setStep, setOutcome, navigation, route) => {
     const steps = step
         .split('.options.')
         .reduce((acc, curr) => [...acc, acc.length > 0 ? acc[acc.length - 1] + '.options.' + curr : curr], [])
@@ -86,12 +86,12 @@ const renderSurvey = (survey, outcome, step, setStep, setOutcome, navigation) =>
         </View>,
         <View>
             {optionsData.map(option => <Button style={styles.button} title={option.title} key={option.key} onPress={() => setStep(step + '.options.' + option.key)}/>)}
-            {renderSummary(optionsData, step, survey, outcome, setOutcome, setStep, navigation)}
+            {renderSummary(optionsData, step, survey, outcome, setOutcome, setStep, navigation, route)}
         </View>
     ]
 }
 
-const renderSummary = (optionsData, step, survey, outcome, setOutcome, setStep, navigation) => {
+const renderSummary = (optionsData, step, survey, outcome, setOutcome, setStep, navigation, route) => {
     if (optionsData.length !== 0) return null
 
     const allSurveys = Object.keys(survey)
@@ -100,7 +100,7 @@ const renderSummary = (optionsData, step, survey, outcome, setOutcome, setStep, 
 
     if (indexOfCurrentSurvey < 0) return null
     if (indexOfCurrentSurvey + 1 < allSurveys.length) return renderNextButton(allSurveys[indexOfCurrentSurvey + 1], outcome, step, setStep, setOutcome)
-    return renderFinishButton(survey, step, outcome, navigation)
+    return renderFinishButton(survey, step, outcome, navigation, route)
 }
 
 const renderNextButton = (nextSurvey, outcome, step, setStep, setOutcome) => {
@@ -112,7 +112,7 @@ const renderNextButton = (nextSurvey, outcome, step, setStep, setOutcome) => {
     return <Button style={styles.button} title={Locale.t('survey.next')} onPress={onPress} key="next"/>
 }
 
-const renderFinishButton = (survey, step, outcome, navigation) => {
+const renderFinishButton = (survey, step, outcome, navigation, route) => {
     const finalOutcome = [...outcome, step]
 
     const onPress = async () => {
@@ -136,11 +136,11 @@ const renderFinishButton = (survey, step, outcome, navigation) => {
                 console.log("surveyPost", response.status, requestConfig)
             }
 
-            if (response.ok) {
-                navigation.goBack()
-            } else {
-                navigation.goBack()
+            navigation.goBack()
 
+            if (response.ok) {
+                route?.params?.loadData()
+            } else {
                 Alert(Locale.t('general.error'), Locale.t('general.unexpectedError'))
     
                 //TODO: ERROR ANALYTICS

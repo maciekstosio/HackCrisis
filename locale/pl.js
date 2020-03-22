@@ -33,6 +33,7 @@ export default {
         headerTitle: "Status znajomych",
         search: "Szukaj...",
         noResults: "Brak wyników",
+        status: "Status:",
     },
     survey: {
         title: "Ankieta",
