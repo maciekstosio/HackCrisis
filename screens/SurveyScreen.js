@@ -64,9 +64,13 @@ const SurveyScreen = ({ route, navigation }) => {
                     marginBottom: 20,
                 }}
             >      
-                <Ionicons name="md-flask" size={96} color={Colors.tintColor}/>    
+                <Ionicons name="ios-flask" size={96} color="#444"/>    
             </View>
-            {isLoading ? <ActivityIndicator /> : renderSurvey(survey, outcome, step, setStep, setOutcome, navigation, route)}
+            {isLoading ? (
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                    <ActivityIndicator />
+                </View>
+            ) : renderSurvey(survey, outcome, step, setStep, setOutcome, navigation, route)}
         </ScrollView>
     );
 }
